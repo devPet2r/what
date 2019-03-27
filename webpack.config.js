@@ -61,7 +61,25 @@ if (process.env.NODE_ENV === 'production') {
       'process.env': {
         NODE_ENV: '"production"'
       }
-    })    
+    }),
+    new HtmlWebpackPlugin({
+      title: 'PRODUCTION prerender-spa-plugin',
+      template: 'index.html',
+      filename: path.resolve(__dirname, 'dist/index.html'),
+      favicon: 'favicon.ico'
+    }),
+    new PrerenderSPAPlugin({
+      staticDir: path.join(__dirname, 'dist'),
+      routes: [ '/', '/about', '/contact' ],
+
+      renderer: new Renderer({
+        inject: {
+          foo: 'bar'
+        },
+        headless: true,
+        renderAfterDocumentEvent: 'render-event'
+      })
+    })
   ])
 } else {
   // NODE_ENV === 'development'
